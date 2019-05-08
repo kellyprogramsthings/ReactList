@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {Row, Col, Button} from 'reactstrap'; 
+import {Row, Col, Button} from 'reactstrap';
+
+import './User.css';
 
 class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editedGreeting: ""
+      editedUser: ""
     };
   }
 
@@ -13,11 +15,11 @@ class User extends Component {
     return (
       <Row className="User">
         <Col xs="10">
-          Hello {this.props.greeting.name}!
+          Hello {this.props.user.name}!
         </Col>
         <Col xs="2">
-          <Button color="danger" onClick={() => this.props.removeGreeting(this.props.greeting.id)}>Remove</Button>
-          <Button color="primary" onClick={() => this.props.editGreeting(this.props.greeting)}>Edit</Button>
+          <Button color="danger" onClick={() => this.props.removeUser(this.props.user.id)}>Remove</Button>
+          <Button color="primary" onClick={() => this.props.editUser(this.props.user)}>Edit</Button>
         </Col>
       </Row>
     );

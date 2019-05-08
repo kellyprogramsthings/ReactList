@@ -5,30 +5,30 @@ class AddUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      greetingName: ""
+      name: ""
     };
 
     this.handleUpdate = this.handleUpdate.bind(this);
-    this.addGreeting = this.addGreeting.bind(this);
+    this.addUser = this.addUser.bind(this);
   }
 
   handleUpdate(event) {
-    this.setState({greetingName: event.target.value});
+    this.setState({name: event.target.value});
   }
 
-  addGreeting() {
-    this.props.addGreeting(this.state.greetingName);
-    this.setState({greetingName: ""});
+  addUser() {
+    this.props.addUser(this.state.name);
+    this.setState({name: ""});
   }
 
   render() {
     return (
       <Row>
         <Col xs="10">
-          <Input type="text" value={this.state.greetingName} onChange={this.handleUpdate} />
+          <Input type="text" value={this.state.name} onChange={this.handleUpdate} />
           </Col>
           <Col xs="2">
-          <Button color="success" onClick={this.addGreeting}>Add</Button>
+          <Button color="success" onClick={this.addUser}>Add</Button>
         </Col>
       </Row>
     )

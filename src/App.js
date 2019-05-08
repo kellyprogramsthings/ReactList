@@ -1,11 +1,11 @@
 import React from 'react';
-import HelloWorldList from './HelloWorldList';
+import UserList from './UserList';
 import './App.css';
 
 const App = () => {
   return (
     <div className="App">
-      <HelloWorldList />
+      <UserList />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
-import {Container, Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'; 
+import {Container, Button, Input, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'; 
 
 import User from './User';
 import AddUser from './AddUser';
@@ -16,19 +16,26 @@ class EditModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    };
+      editedName: this.props.editingItem.name
+    }
+
+    this.handleUpdate = this.handleUpdate.bind(this);
+  }
+
+  handleUpdate(event) {
+    this.setState({editedName: event.target.value});
   }
 
   render() {
     return (
       <div>
         <Modal isOpen={true} toggle={this.props.onCloseModal}>
-          <ModalHeader toggle={this.props.onCloseModal}>Hi.</ModalHeader>
+          <ModalHeader toggle={this.props.onCloseModal}>Edit User</ModalHeader>
           <ModalBody>
-            {this.props.editingName.name}
+            <Input value={this.state.editedName} onChange={this.handleUpdate}></Input>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.props.onCloseModal}>Do Something</Button>{' '}
+            <Button color="primary" onClick={() => this.props.setChangedUser(this.props.editingItem.id, this.state.editedName)}>Save</Button>{' '}
             <Button color="secondary" onClick={this.props.onCloseModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
@@ -42,34 +49,43 @@ class UserList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      greetings: [{id: 1, name: 'Vanya'}, {id: 2, name: 'Klaus'}, {id: 3, name: 'Diego'}],
+      users: [{id: 1, name: 'Vanya'}, {id: 2, name: 'Klaus'}, {id: 3, name: 'Diego'}],
       editingItem: null
     };
 
-    this.addGreeting = this.addGreeting.bind(this);
-    this.removeGreeting = this.removeGreeting.bind(this);
-    this.editGreeting = this.editGreeting.bind(this);
+    this.addUser = this.addUser.bind(this);
+    this.removeUser = this.removeUser.bind(this);
+    this.editUser = this.editUser.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
+    this.setChangedUser = this.setChangedUser.bind(this);
   }
 
-  addGreeting(newName) {
-    this.setState({greetings: [...this.state.greetings, {id: getNextId(), name: newName}]});
+  addUser(newName) {
+    this.setState({users: [...this.state.users, {id: getNextId(), name: newName}]});
   }
 
-  removeGreeting(removeId) {
-    const filteredGreetings = _.reject(this.state.greetings, x => x.id === removeId);
-    this.setState({greetings: filteredGreetings});
+  removeUser(removeId) {
+    const filteredUsers = _.reject(this.state.users, x => x.id === removeId);
+    this.setState({users: filteredUsers});
   }
 
-  editGreeting(g) {
-    this.setState({editingItem: g});
+  editUser(u) {
+    this.setState({editingItem: u});
   }
 
-  renderGreetings() {
-    return _.chain(this.state.greetings)
+  setChangedUser(id, newName) {
+    let list = this.state.users;
+    const index = _.findIndex(list, x => x.id === id);
+    list[index] = {name: newName};
+    this.setState({users: list});
+    this.setState({editingItem: null});
+  }
+
+  renderUsers() {
+    return _.chain(this.state.users)
       .sortBy(x => x.name)
-      .map(g => (
-        <User key={g.id} greeting={g} removeGreeting={this.removeGreeting} editGreeting={this.editGreeting}/>
+      .map(u => (
+        <User key={u.id} user={u} removeUser={this.removeUser} editUser={this.editUser}/>
       ))
       .value();
   }
@@ -81,9 +97,9 @@ class UserList extends Component {
   render() {
     return (
       <Container>
-        {this.renderGreetings()}
-        <AddUser addGreeting={this.addGreeting} />
-        {this.state.editingItem ? <EditModal editingName={this.state.editingItem} onCloseModal={this.onCloseModal}/> : null}
+        {this.renderUsers()}
+        <AddUser addUser={this.addUser} />
+        {this.state.editingItem ? <EditModal editingItem={this.state.editingItem} editUser={this.editUser} setChangedUser={this.setChangedUser} onCloseModal={this.onCloseModal}/> : null}
       </Container>
     )
   }
